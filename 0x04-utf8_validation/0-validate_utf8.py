@@ -1,20 +1,40 @@
 #!/usr/bin/python3
-"""
-"""
+"""UTF-8 Validation"""
+
 
 def validUTF8(data):
-    list = []
-    for i in data:
-        if (i & 0xF0) == 0xF0:
-            list.append(4)
-        if (i & 0xE0) == 0xE0:
-            list.append(3)
-        if (i & 0xC0) == 0xC0:
-            list.append(2)
-        if (i & 0x7F) == 0:
-            list.append(1)
-    print(list)
+    """
+    Determines if a given data set represents a valid UTF-8 encoding.
+    Args:
+        data: A list of integers, where each integer represents 1 byte of data.
+    Returns:
+        True if data is a valid UTF-8 encoding, else return False.
+    """
+    bit1 = 1 << 7
+    bit2 = 1 << 6
+    nbytes = 0
 
+    if not data or len(data) == 0:
+            return True
 
-data = [80, 121, 116, 104, 111, 110, 32, 105, 115, 32, 99, 111, 111, 108, 33]
-validUTF8(data)
+    for num in data:
+            bit = 1 << 7
+            if nbytes == 0:
+                while (bit & num):
+                    nbytes += 1
+                    bit = bit >> 1
+
+                if nbytes == 0:
+                    continue
+                if nbytes == 1 or nbytes > 4:
+                    return False
+            else:
+
+                if not (num & bit1 and not (num & bit2)):
+                    return False
+            nbytes -= 1
+
+    if nbytes:
+            return False
+    else:
+            return True
