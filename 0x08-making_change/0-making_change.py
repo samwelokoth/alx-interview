@@ -1,47 +1,31 @@
 #!/usr/bin/python3
-
-""" Contains makeChange function"""
-
-
-def makeChange(coins, total):
-    """
-    Returns: fewest number of coins needed to meet total
-        If total is 0 or less, return 0
-        If total cannot be met by any number of coins you have, return -1
-    """
-    if not coins or coins is None:
-        return -1
-    if total <= 0:
-        return 0
-    change = 0
-    coins = sorted(coins)[::-1]
-    for coin in coins:
-        while coin <= total:
-            total -= coin
-            change += 1
-        if (total == 0):
-            return change
-    return -1#!/usr/bin/python3
-
-""" Contains makeChange function"""
+"""Change comes from within
+"""
 
 
 def makeChange(coins, total):
+    """Given a pile of coins of different values,
+    determine the fewest number of coins needed
+    to meet a given amount total using a greedy approach.
     """
-    Returns: fewest number of coins needed to meet total
-        If total is 0 or less, return 0
-        If total cannot be met by any number of coins you have, return -1
-    """
-    if not coins or coins is None:
-        return -1
     if total <= 0:
         return 0
-    change = 0
-    coins = sorted(coins)[::-1]
+
+    # Sort the coins in descending order
+    coins.sort(reverse=True)
+
+    num_coins = 0
+    remaining_total = total
+
     for coin in coins:
-        while coin <= total:
-            total -= coin
-            change += 1
-        if (total == 0):
-            return change
-    return -1
+        if remaining_total <= 0:
+            break
+
+        count = remaining_total // coin
+        num_coins += count
+        remaining_total -= coin * count
+
+    if remaining_total > 0:
+        return -1
+
+    return num_coins
